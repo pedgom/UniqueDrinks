@@ -9,7 +9,7 @@ using UniqueDrinks.Data;
 
 namespace UniqueDrinks.Data.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(DrinksDB))]
     [Migration("00000000000000_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
