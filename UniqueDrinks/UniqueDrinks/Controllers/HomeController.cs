@@ -23,6 +23,11 @@ namespace UniqueDrinks.Controllers
             return View();
         }
 
+        public IActionResult Clientes()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
