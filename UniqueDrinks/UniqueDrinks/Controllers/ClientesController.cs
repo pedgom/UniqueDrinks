@@ -12,6 +12,9 @@ namespace UniqueDrinks.Controllers
 {
     public class ClientesController : Controller
     {
+        /// <summary>
+        /// variável que identifica a BD do projeto
+        /// </summary>
         private readonly DrinksDB _context;
 
         public ClientesController(DrinksDB context)
