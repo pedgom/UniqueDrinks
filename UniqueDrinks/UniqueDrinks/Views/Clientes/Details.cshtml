@@ -41,18 +41,18 @@
 
 @if (Model.ListaDeReservas.Count == 0)
 {
-    <p>Não há apostas associadas ao Utilizador.</p>
+    <p>Não há reservas associadas ao Utilizador.</p>
 }
 else
 {
     <table class="table">
         <tr>
-            <th>Jogo Apostado</th>
-            <th>Descrição da aposta</th>
-            <th>Data da aposta</th>
-            <th>Quantia da aposta</th>
-            <th>Multiplicador da aposta</th>
-            <th>Estado da aposta</th>
+            <th>Reserva</th>
+            <th>Data da Reserva</th>
+            <th>Data da Entrega</th>
+            <th>Estado da Reserva</th>
+            <th>Quantidade de Produtos</th>
+            
         </tr>
         @foreach (var reserva in Model.ListaDeReservas)
         {
