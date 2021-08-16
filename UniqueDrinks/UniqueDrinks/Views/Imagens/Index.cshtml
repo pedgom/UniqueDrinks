@@ -1,0 +1,52 @@
+﻿@model IEnumerable<UniqueDrinks.Models.Imagens>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Imagem)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bebida)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @* invoca o valor existente no Modelo com o conteúdo deste atributo *@
+
+                <img src="~/fotos/@Html.DisplayFor(modelItem => item.Imagem)"
+                     width="200"
+                     alt="Imagem da bebida  @Html.DisplayFor(modelItem => item.Bebida.Nome)"
+                     title="@Html.DisplayFor(modelItem => item.Bebida.Nome)" />
+            </td>
+
+            
+
+            <td>
+                <a asp-action="Details" asp-controller="Caes" asp-route-id="@item.Bebida.Id">
+                    @Html.DisplayFor(modelItem => item.Bebida.Nome)
+                </a>
+            </td>
+           
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
