@@ -57,6 +57,13 @@ namespace UniqueDrinks.Models
         [Required]
         public DateTime Datanasc { get; set; }
 
+
+        /// <summary>
+        /// Funciona como Chave Forasteira no relacionamento entre os Clientes
+        /// e a tabela de autenticação
+        /// </summary>
+        public string UserName { get; set; }
+
         /// <summary>
         /// lista de Reservas associadas ao Cliente
         /// </summary>

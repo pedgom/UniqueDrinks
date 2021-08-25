@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,19 +20,26 @@ namespace UniqueDrinks.Controllers
 
         private readonly IWebHostEnvironment _caminho;
 
+        private readonly UserManager<IdentityUser> _userManager;
         public ImagensController(
             DrinksDB context,
-            IWebHostEnvironment caminho
+            IWebHostEnvironment caminho,
+            UserManager<IdentityUser> userManager
             )
         { 
             _context = context;
             _caminho = caminho;
+            _userManager = userManager;
         }
 
         // GET: Imagens
         public async Task<IActionResult> Index()
         {
-            var imagens = _context.Imagens.Include(i => i.Bebida);
+            var imagens = _context.Imagens
+                 .Include(f => f.Bebida)
+                 .ThenInclude(c => c.ListaDeClientes)
+                 .ThenInclude(cc => cc.Cliente);
+
             return View(await imagens.ToListAsync());
         }
 
