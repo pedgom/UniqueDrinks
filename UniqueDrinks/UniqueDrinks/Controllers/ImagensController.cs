@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +15,7 @@ using UniqueDrinks.Models;
 
 namespace UniqueDrinks.Controllers
 {
+    [Authorize]
     public class ImagensController : Controller
     {
         private readonly DrinksDB _context;
@@ -33,14 +35,35 @@ namespace UniqueDrinks.Controllers
         }
 
         // GET: Imagens
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var imagens = _context.Imagens
-                 .Include(f => f.Bebida)
-                 .ThenInclude(c => c.ListaDeClientes)
-                 .ThenInclude(cc => cc.Cliente);
+            //var imagens = _context.Imagens
+            //   .Include(f => f.Bebida)
+            // .ThenInclude(c => c.ListaDeClientes)
+            //.ThenInclude(cc => cc.Cliente);
 
-            return View(await imagens.ToListAsync());
+            //return View(await imagens.ToListAsync());
+
+            var imagens = await _context.Imagens.Include(f => f.Bebida).ToListAsync();
+
+            string idDaPessoaAutenticada = _userManager.GetUserId(User);
+
+            var bebidas = await (from c in _context.Bebidas
+                                 join cc in _context.Reservas on c.Id equals cc.BebidaFK
+                                 join cr in _context.Clientes on cc.ClienteFK equals cr.Id
+                                 where cr.UserName == idDaPessoaAutenticada
+                                 select c.Id)
+                                 .ToListAsync();
+
+            var fotos = new ImagensBebidas
+            {
+                ListaDeBebidas = bebidas,
+                ListaDeImagens = imagens
+            };
+
+            return View(fotos);
+
         }
 
         // GET: Imagens/Details/5

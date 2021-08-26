@@ -1,28 +1,34 @@
-﻿@model IEnumerable<UniqueDrinks.Models.Imagens>
+﻿@model UniqueDrinks.Models.ImagensBebidas
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lista de Imagens";
 }
 
-<h1>Index</h1>
+<h1>Lista de Imagens de Bebidas</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (User.Identity.IsAuthenticated)
+{
+    <p>
+        <a asp-action="Create">Adicionar nova Imagem</a>
+    </p>
+}
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Imagem)
+                @Html.DisplayNameFor(model => model.ListaDeImagens.FirstOrDefault().Imagem)
             </th>
+            if (User.Identity.IsAuthenticated) {
             <th>
-                @Html.DisplayNameFor(model => model.Bebida)
+                @Html.DisplayNameFor(model => model.ListaDeImagens.FirstOrDefault().Bebida)
             </th>
             <th></th>
+            }
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model.ListaDeImagens)
+        {
         <tr>
             <td>
                 @* invoca o valor existente no Modelo com o conteúdo deste atributo *@
@@ -33,20 +39,37 @@
                      title="@Html.DisplayFor(modelItem => item.Bebida.Nome)" />
             </td>
 
-            
+            @if (User.Identity.IsAuthenticated)
+            {
+                
+                <td>
+                    @if (Model.ListaDeBebidas.Contains(item.BebidaFK))
+                    {
+                       
+                        <a asp-action="Details" asp-controller="Bebidas" asp-route-id="@item.Bebida.Id">
+                            @Html.DisplayFor(modelItem => item.Bebida.Nome)
+                        </a>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.Bebida.Nome)
+                    }
+                </td>
+                <td>
+                    @if (Model.ListaDeBebidas.Contains(item.BebidaFK))
+                    {
+                        
+                        <text>
+                            
+                            <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Apagar</a>
+                        </text>
+                    }
+                </td>
+            }
 
-            <td>
-                <a asp-action="Details" asp-controller="Caes" asp-route-id="@item.Bebida.Id">
-                    @Html.DisplayFor(modelItem => item.Bebida.Nome)
-                </a>
-            </td>
-           
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
         </tr>
-}
+        }
     </tbody>
 </table>
