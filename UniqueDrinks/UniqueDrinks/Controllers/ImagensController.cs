@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,55 +13,26 @@ using UniqueDrinks.Models;
 
 namespace UniqueDrinks.Controllers
 {
-    [Authorize]
     public class ImagensController : Controller
     {
         private readonly DrinksDB _context;
 
         private readonly IWebHostEnvironment _caminho;
 
-        private readonly UserManager<IdentityUser> _userManager;
         public ImagensController(
             DrinksDB context,
-            IWebHostEnvironment caminho,
-            UserManager<IdentityUser> userManager
+            IWebHostEnvironment caminho
             )
-        { 
+        {
             _context = context;
             _caminho = caminho;
-            _userManager = userManager;
         }
 
         // GET: Imagens
-        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            //var imagens = _context.Imagens
-            //   .Include(f => f.Bebida)
-            // .ThenInclude(c => c.ListaDeClientes)
-            //.ThenInclude(cc => cc.Cliente);
-
-            //return View(await imagens.ToListAsync());
-
-            var imagens = await _context.Imagens.Include(f => f.Bebida).ToListAsync();
-
-            string idDaPessoaAutenticada = _userManager.GetUserId(User);
-
-            var bebidas = await (from c in _context.Bebidas
-                                 join cc in _context.Reservas on c.Id equals cc.BebidaFK
-                                 join cr in _context.Clientes on cc.ClienteFK equals cr.Id
-                                 where cr.UserName == idDaPessoaAutenticada
-                                 select c.Id)
-                                 .ToListAsync();
-
-            var fotos = new ImagensBebidas
-            {
-                ListaDeBebidas = bebidas,
-                ListaDeImagens = imagens
-            };
-
-            return View(fotos);
-
+            var imagens = _context.Imagens.Include(i => i.Bebida);
+            return View(await imagens.ToListAsync());
         }
 
         // GET: Imagens/Details/5
@@ -79,7 +48,7 @@ namespace UniqueDrinks.Controllers
                                          .FirstOrDefaultAsync(f => f.Id == id);
             if (imagem == null)
             {
-                
+
                 return RedirectToAction("Index");
             }
 
@@ -128,8 +97,8 @@ namespace UniqueDrinks.Controllers
                     // definir o novo nome da fotografia     
                     Guid g;
                     g = Guid.NewGuid();
-                    nomeImagem = foto.BebidaFK + "_" + g.ToString(); 
-                                                                  
+                    nomeImagem = foto.BebidaFK + "_" + g.ToString();
+
                     string extensao = Path.GetExtension(fotoBebida.FileName).ToLower();
                     // agora, consigo ter o nome final do ficheiro
                     nomeImagem = nomeImagem + extensao;
@@ -214,7 +183,7 @@ namespace UniqueDrinks.Controllers
 
             var numIdFoto = HttpContext.Session.GetInt32("NumImageEdit");
 
-            
+
             if (numIdFoto == null || numIdFoto != foto.Id)
             {
                 return RedirectToAction("Index");

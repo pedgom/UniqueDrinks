@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniqueDrinks.Data;
 
 namespace UniqueDrinks.Data.Migrations
 {
     [DbContext(typeof(DrinksDB))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210826152202_ImageView")]
+    partial class ImageView
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,8 +245,6 @@ namespace UniqueDrinks.Data.Migrations
 
                     b.Property<string>("Stock")
                         .HasColumnType("nvarchar(max)");
-
-
 
                     b.HasKey("Id");
 
